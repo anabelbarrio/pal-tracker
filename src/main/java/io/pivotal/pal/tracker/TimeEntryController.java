@@ -1,6 +1,7 @@
 package io.pivotal.pal.tracker;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -12,23 +13,33 @@ public class TimeEntryController {
         this.timeEntryRepository = timeEntryRepository;
     }
 
-    public ResponseEntity create(TimeEntry timeEntry) {
-        return null;
+    public ResponseEntity<TimeEntry> create(TimeEntry timeEntry) {
+        timeEntry = timeEntryRepository.create(timeEntry);
+        return new ResponseEntity<>(timeEntry, HttpStatus.CREATED);
     }
 
     public ResponseEntity<TimeEntry> read(long id) {
-        return null;
+        TimeEntry timeEntry = timeEntryRepository.find(id);
+        if (timeEntry == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(timeEntry);
     }
 
     public ResponseEntity<List<TimeEntry>> list() {
-        return null;
+        return ResponseEntity.ok(timeEntryRepository.list());
     }
 
     public ResponseEntity update(long id, TimeEntry timeEntry) {
-        return null;
+        timeEntry = timeEntryRepository.update(id, timeEntry);
+        if (timeEntry == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(timeEntry);
     }
 
     public ResponseEntity<TimeEntry> delete(long id) {
-        return null;
+        timeEntryRepository.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
